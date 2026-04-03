@@ -7,8 +7,9 @@ export function MainPage() {
 
     return (
         <div className="w-full h-full flex-col">
-            <TopDiv/>
-            <MainDiv/>
+            <TopDiv>
+                <MainDiv/>
+            </TopDiv>    
             <BottomDiv/>
         </div>
     )

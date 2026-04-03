@@ -1,10 +1,13 @@
 import './App.css'
 import { MainPage } from './page/MainPage'
+import { LangContextProvider } from './utils/LangContext'
 
 function App() {
 
   return (
-    <MainPage/>
+    <LangContextProvider>
+      <MainPage/>
+    </LangContextProvider>
   )
 }
 
