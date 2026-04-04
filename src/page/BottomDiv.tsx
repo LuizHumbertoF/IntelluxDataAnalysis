@@ -11,14 +11,14 @@ export function BottomDiv() {
 
     return (
         
-        <div className="flex w-full h-[75px] pt-[5px]">
+        <div className="flex w-full h-[80px] pt-[5px]">
             <div className="bg-[#d6fb49] flex items-center w-full h-full border-t border-[#61615f] shadow-md">
                 <div className="w-1/3 h-full flex items-center pl-[60px]">
                     <img alt="intellux-logo" src={intelluxLogo} className='w-32'  />
                 </div>
 
                 <div className=" w-1/3 h-full flex flex-col items-center justify-end">
-                    <ul className='flex items-center pb-1 gap-6 text-[15px] text-[#030f13]'>
+                    <ul className='flex items-center pb-2 gap-6 text-[15px] text-[#030f13]'>
                         <li><button className='hover:underline hover:-translate-y-0.5 transition-transform duration-200'>{renderLang(selectedLanguage, "Soluções", "Solutions", "Soluciones")}</button></li>
                         <li><button className='hover:underline hover:-translate-y-0.5 transition-transform duration-200'>{renderLang(selectedLanguage, "Planos", "Plans", "Planes")}</button></li>
                         <li><button className='hover:underline hover:-translate-y-0.5 transition-transform duration-200'>Blog</button></li>

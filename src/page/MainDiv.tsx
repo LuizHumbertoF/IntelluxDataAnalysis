@@ -8,7 +8,7 @@ export function MainDiv() {
     const { selectedLanguage } = useContext(LangContext)!;
     
     return (
-        <div className="flex flex-col items-center w-full h-[505px] gap-10 relative">
+        <div className="flex flex-col items-center w-full h-[500px] gap-10 relative">
             <h1 className="font-bold text-[36px] mt-[100px]"> {renderLang(selectedLanguage, "Bem vindo(a) à página de consulta de dados da Intellux!", 
                 "Welcome to the Intellux data consultation page!", 
                 "¡Bienvenido(a) a la página de consulta de datos de Intellux!")} 
