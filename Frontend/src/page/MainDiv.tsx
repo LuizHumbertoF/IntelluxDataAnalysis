@@ -4,8 +4,10 @@ import { LangContext } from '../utils/LangContext';
 import { renderLang } from '../utils/renderLang';
 import { FetchGetProfileData } from '../controllers/fetchGetProfileData';
 import { FetchGenerateReport } from '../controllers/fetchGenerateReport';
+import type { LanguageOptions } from '../utils/LangContext';
 
 export interface ReportBody {
+    selectedLanguage: LanguageOptions;
     user: string;
     fullName: string;
     privateAccount: boolean;
@@ -29,6 +31,7 @@ export function MainDiv() {
     const [profileData, setProfileData] = useState<any>(null);
     const [ reportBody, setReportBody] = useState<ReportBody | undefined>(undefined);
     const [ report, setReport ] = useState("");
+    const [dots, setDots] = useState("");
     
     async function handleClickSearch() {
         
@@ -73,6 +76,7 @@ export function MainDiv() {
         }
 
         setReportBody({
+            selectedLanguage: selectedLanguage,
             user: usernameSearch, 
             fullName: profileData.fullName,
             privateAccount: profileData.privateAccount,
@@ -105,6 +109,7 @@ export function MainDiv() {
         }
     }
 
+
     useEffect(() => {
         if(profileData) {
             likesAndCommentsMean();
@@ -116,14 +121,29 @@ export function MainDiv() {
             generateReport();
         }
     }, [reportBody]);
+
+    useEffect(() => {
+        let intervalo: ReturnType<typeof setInterval>;
+
+        if (loading) {
+            intervalo = setInterval(() => {
+                setDots((prev) => (prev.length >= 3 ? "" : prev + "."));
+            }, 500);
+        } else {
+            setDots("");
+        }
+
+        return () => clearInterval(intervalo);
+        
+    }, [loading]); 
     
 
     return (
         <div className={`flex flex-col items-center w-full h-[500px] gap-10 relative`}>
 
             <div className={`absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center transition-all duration-500 ${loading ? `opacity-100 z-10` : `opacity-0 pointer-events-none -z-10`}`}>
-                <div className='bg-[#d3d3d1] font-bold flex flex-col items-center justify-center w-[190px] h-[50px] shadow-md border-1 border-[#61615f] rounded-full '>
-                    {renderLang(selectedLanguage, "Carregando...", "Loading...", "Cargando...")}
+                <div className='bg-[#d3d3d1] flex flex-col p-[45px] justify-center w-[190px] h-[40px] shadow-md border-1 border-[#61615f] rounded-full '>
+                    <h1 className='text-black text-[22px]'>{renderLang(selectedLanguage, "Carregando", "Loading", "Cargando")}{dots}</h1>
                 </div>
             </div>
 
@@ -142,21 +162,21 @@ export function MainDiv() {
 
                     <div className=' text-black gap-4 flex flex-col justify-start items-center h-full w-full'>
                         <div className='flex gap-4'>
-                            <h3>Seguidores: {profileData?.followersCount}</h3>
-                            <h3>Seguindo: {profileData?.followsCount}</h3>
-                            <h3>Quantidade de posts: {profileData?.postsCount}</h3>
+                            <h3>{renderLang(selectedLanguage, "Seguidores", "Followers", "Seguidores")}: {profileData?.followersCount}</h3>
+                            <h3>{renderLang(selectedLanguage, "Seguindo", "Following", "Siguiendo")}: {profileData?.followsCount}</h3>
+                            <h3>{renderLang(selectedLanguage, "Quantidade de posts", "number of posts", "cantidad de publicaciones")}: {profileData?.postsCount}</h3>
                         </div>
 
                     </div>
                 </div>
 
                 <div className='bg-white w-[900px] h-[250px] mb-auto rounded-md border border-[#8f8f87] flex overflow-y-auto p-4 text-black'>
-                    {loadingReport ? ("Carregando") : report}
+                    {loadingReport ? (renderLang(selectedLanguage, "Carregando...", "Loading...", "Cargando...")) : report}
                 </div>
                     
         
                 <button
-                    className='bg-[#0b2f3a] text-[#d6fb49] mb-1 mt-1 font-bold w-[80px] h-[50px] rounded-full hover:underline hover:-translate-y-0.5 transition-transform duration-200 shadow-md border'
+                    className='bg-[#0b2f3a] text-[#d6fb49] mb-1 mt-1 font-bold w-[85px] h-[50px] rounded-full hover:underline hover:-translate-y-0.5 transition-transform duration-200 shadow-md border'
                     onClick={
                         () => { 
                             setProfileData(null);
@@ -172,9 +192,9 @@ export function MainDiv() {
             </div>
             
             <div className={` absolute gap-8 top-0 left-0 w-full h-full flex flex-col items-center justify-center transition-all duration-500 ${(!profileData && !loading) ? `opacity-100 z-10` : `opacity-0 pointer-events-none -z-10`}`}>
-                <h1 className="font-bold text-[36px]"> {renderLang(selectedLanguage, "Bem vindo(a) à página de consulta de dados da Intellux!", 
+                <h1 className="font-bold text-[36px]"> {renderLang(selectedLanguage, "Bem vindo à página de consulta de dados da Intellux!", 
                     "Welcome to the Intellux data consultation page!", 
-                    "¡Bienvenido(a) a la página de consulta de datos de Intellux!")} 
+                    "¡Bienvenido a la página de consulta de datos de Intellux!")} 
                 </h1>
                 
                 <h2 className="text-lg"> {renderLang(selectedLanguage, `Obtenha informações e dados estatísticos de perfis do Instagram com apenas um clique.`, 
@@ -197,7 +217,7 @@ export function MainDiv() {
                     </div>
 
                     <button 
-                        className='bg-[#0b2f3a] text-[#d6fb49] font-bold w-[150px] h-[42px] rounded-full hover:underline hover:-translate-y-0.5 transition-transform duration-200 shadow-md border border-black'
+                        className='bg-[#0b2f3a] text-[#d6fb49] font-bold w-[150px] h-[42px] rounded-full hover:underline hover:-translate-y-0.5 transition-transform duration-200 shadow-md'
                         onClick={handleClickSearch}
                     >
                         {renderLang(selectedLanguage, "Buscar", "Search", "Buscar")}

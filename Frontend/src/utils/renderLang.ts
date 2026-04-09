@@ -1,6 +1,6 @@
 import type { LanguageOptions } from "./LangContext";
 
-export function renderLang(language: LanguageOptions, br_string: string, us_string: string, es_string: string) {
+export function renderLang(language: LanguageOptions, br_string: string, us_string: string, es_string: string): string {
     switch(language) {
         case "pt-br": 
             return br_string;

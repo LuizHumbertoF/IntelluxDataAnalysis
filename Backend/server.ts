@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 
 
 const app = express();
-dotenv.config();
+dotenv.config({ path: "./Backend/.env" });
 
 if (!process.env.APIFY_TOKEN) {
     throw new Error("APIFY_TOKEN não definido no .env");
@@ -67,12 +67,22 @@ app.get("/getProfileData", async (req: Request, res: Response) => {
 
 app.post("/generateReport", async (req: Request, res: Response) => {
 
-    const { user, fullName, privateAccount, followersCount, followsCount, numberPosts, totalLikes, totalComments, likesMean, commentsMean } = req.body;
+    const { selectedLanguage, user, fullName, privateAccount, followersCount, followsCount, numberPosts, totalLikes, totalComments, likesMean, commentsMean } = req.body;
     const privatePortuguese = privateAccount ? "verdadeiro" : "falso";
     
-    if (!fullName || followersCount === undefined) {
+    if (!fullName || followersCount === undefined || !selectedLanguage) {
         return res.status(400).json({ message: "Faltam dados para gerar o relatório." });
     }
+
+    let languageFullName = ""
+    if(selectedLanguage === "pt-br") {
+        languageFullName = "portugues brasil";
+    } else if(selectedLanguage === "en") {
+        languageFullName = "ingles";
+    } else if(selectedLanguage === "es") {
+        languageFullName = "espanhol";
+    }
+    console.log(languageFullName);
 
     try{
 
@@ -86,7 +96,7 @@ app.post("/generateReport", async (req: Request, res: Response) => {
         const model = genAI.getGenerativeModel({model: "gemini-2.5-flash"});
 
         const prompt = `Você é um especialista em marketing digital sênior da startup Intellux.
-        Crie um relatório curto, engajador e direto ao ponto (máximo de 3 parágrafos) analisando os seguintes dados do perfil de ${fullName}:
+        Crie um relatório curto na linguagem ${languageFullName}, engajador e direto ao ponto (máximo de 3 parágrafos) analisando os seguintes dados do perfil de ${fullName}:
         - Username: ${user};
         - Seguidores: ${followersCount};
         - Seguindo: ${followsCount};
@@ -96,15 +106,31 @@ app.post("/generateReport", async (req: Request, res: Response) => {
         - Número total de comentários do perfil: ${totalComments};
         - Média de curtidas por post: ${likesMean};
         - Média de comentários por post: ${commentsMean};
-        Não colocar efeitos de negrito, etc, na resposta fornecida (apenas o texto cru). Atente-se que se a conta for privada, 
-        não será possível verificar as outras métricas da conta, apenas a quantidade de seguidores e seguindo, todos 
-        os outros atributos serão zerados. No final, dê uma sugestão breve de como essa pessoa pode melhorar o engajamento. 
+        Não colocar efeitos de negrito, etc, na resposta fornecida (apenas o texto cru). Atente-se que se a conta for privada, não será possível verificar as outras métricas da conta, apenas a quantidade de seguidores e seguindo, todos os outros atributos serão zerados. No final, dê uma sugestão breve de como essa pessoa pode melhorar o engajamento. 
         Assine como "Intellux IA".`;
 
-        console.log("/n/n", prompt, "/n/n");
+        console.log(prompt);
 
-        const result = await model.generateContent(prompt);
-        const responseText = result.response.text();
+        let tentativas = 0;
+        const maxTentativas = 3;
+        let responseText = "";
+
+        while (tentativas < maxTentativas) {
+            try {
+                const result = await model.generateContent(prompt);
+                responseText = result.response.text();
+                break;
+            } catch(e: any) {
+                tentativas++;
+                console.warn(`Tentativa ${tentativas} falhou no Gemini. Aguardando...`);
+                
+                if (e.status === 503 && tentativas < maxTentativas) {
+                    await new Promise(resolve => setTimeout(resolve, 2000)); // Pausa de 2s
+                } else {
+                    throw e;
+                }
+            }
+        }
 
         console.log("Relatório gerado com sucesso.");
 

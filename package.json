@@ -1,5 +1,11 @@
 {
   "dependencies": {
-    "@google/generative-ai": "^0.24.1"
+    "@google/generative-ai": "^0.24.1",
+    "tsx": "^4.21.0",
+    "vite": "^8.0.8"
+  },
+  "scripts": {
+    "backend": "tsx watch Backend/server.ts",
+    "frontend": "npm run dev --prefix Frontend"
   }
 }

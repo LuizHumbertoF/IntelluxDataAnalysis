@@ -4,6 +4,7 @@ import { FaLinkedin } from "react-icons/fa";
 import { useContext } from 'react';
 import { LangContext } from '../utils/LangContext';
 import { renderLang } from '../utils/renderLang';
+import { Link } from "react-router-dom";
 
 export function BottomDiv() {
     
@@ -18,26 +19,40 @@ export function BottomDiv() {
                 </div>
 
                 <div className=" w-1/3 h-full flex flex-col items-center justify-end">
-                    <ul className='flex items-center pb-2 gap-6 text-[15px] text-[#030f13]'>
-                        <li><button className='hover:underline hover:-translate-y-0.5 transition-transform duration-200'>{renderLang(selectedLanguage, "Soluções", "Solutions", "Soluciones")}</button></li>
-                        <li><button className='hover:underline hover:-translate-y-0.5 transition-transform duration-200'>{renderLang(selectedLanguage, "Planos", "Plans", "Planes")}</button></li>
-                        <li><button className='hover:underline hover:-translate-y-0.5 transition-transform duration-200'>Blog</button></li>
-                        <li><button className='hover:underline hover:-translate-y-0.5 transition-transform duration-200'>{renderLang(selectedLanguage, "Sobre nós", "About us", "Acerca de")}</button></li>
-                        <li><button className='hover:underline hover:-translate-y-0.5 transition-transform duration-200'>{renderLang(selectedLanguage, "Ajuda", "Help", "Ayuda")}</button></li>
-                    </ul>
+                        <Link to="/developing">
+                            <ul className='flex items-center pb-2 gap-6 text-[15px] text-[#030f13]'>
+                                <li><button className='hover:underline hover:-translate-y-0.5 transition-transform duration-200'>{renderLang(selectedLanguage, "Soluções", "Solutions", "Soluciones")}</button></li>
+                                <li><button className='hover:underline hover:-translate-y-0.5 transition-transform duration-200'>{renderLang(selectedLanguage, "Planos", "Plans", "Planes")}</button></li>
+                                <li><button className='hover:underline hover:-translate-y-0.5 transition-transform duration-200'>Blog</button></li>
+                                <li><button className='hover:underline hover:-translate-y-0.5 transition-transform duration-200'>{renderLang(selectedLanguage, "Sobre nós", "About us", "Acerca de")}</button></li>
+                                <li><button className='hover:underline hover:-translate-y-0.5 transition-transform duration-200'>{renderLang(selectedLanguage, "Ajuda", "Help", "Ayuda")}</button></li>
+                            </ul>
+                        </Link>
                     <div className='text-xs'>
                         {renderLang(selectedLanguage, "© 2026 Intellux. Todos os direitos reservados.", "© 2026 Intellux. All rights reserved.", "© 2026 Intellux. Todos los derechos reservados.")}
                     </div>
                 </div>
                 
                 <div className='w-1/3 h-full gap-3 flex pr-[65px] items-center justify-end'>
-                    <button>
-                        <FaInstagram size={35} color="#0b2f3a"/>
-                    </button>
+                    <a
+                        href="https://instagram.com/intellux_"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <button>
+                            <FaInstagram size={35} color="#0b2f3a"/>
+                        </button>
+                    </a>
 
-                    <button>
-                        <FaLinkedin size={35} color="#0b2f3a"/>
-                    </button>
+                    <a
+                        href="https://www.linkedin.com/company/intellux/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <button>
+                            <FaLinkedin size={35} color="#0b2f3a"/>
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
