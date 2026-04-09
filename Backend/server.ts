@@ -7,14 +7,15 @@ import dotenv from "dotenv";
 
 
 const app = express();
-dotenv.config({ path: "./Backend/.env" });
-
-if (!process.env.APIFY_TOKEN) {
-    throw new Error("APIFY_TOKEN não definido no .env");
-}
+dotenv.config();
 
 console.log("Chave do Apify:", process.env.APIFY_TOKEN ? "OK" : "FALHOU");
 console.log("Chave do Gemini:", process.env.GEMINI_TOKEN ? "OK" : "FALHOU");
+
+if (!process.env.APIFY_TOKEN || !process.env.GEMINI_TOKEN) {
+    throw new Error("APIFY_TOKEN ou GEMINI_TOKEN não definido no .env");
+}
+
 
 const client = new ApifyClient({
     token: process.env.APIFY_TOKEN,
