@@ -1,11 +1,13 @@
 {
-  "dependencies": {
-    "@google/generative-ai": "^0.24.1",
-    "tsx": "^4.21.0",
-    "vite": "^8.0.8"
-  },
+  "name": "intellux-app",
+  "private": true,
+  "workspaces": [
+    "Frontend",
+    "Backend"
+  ],
   "scripts": {
-    "backend": "tsx watch Backend/server.ts",
-    "frontend": "npm run dev --prefix Frontend"
+    "backend": "npm run dev --workspace=Backend",
+    "frontend": "npm run dev --workspace=Frontend",
+    "start": "npm run backend & npm run frontend"
   }
 }
