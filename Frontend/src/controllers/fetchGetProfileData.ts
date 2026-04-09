@@ -14,7 +14,7 @@ export class FetchGetProfileData {
             return profileDataResponse.data;
         }
         catch(e) {
-            console.error("Erro ao conectar com o backend:", e);
+            console.error("Erro ao buscar informações do perfil:", e);
 
             throw new Error("Não foi possível buscar os dados do perfil.");
         }

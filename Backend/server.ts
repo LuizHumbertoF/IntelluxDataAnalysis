@@ -13,6 +13,9 @@ if (!process.env.APIFY_TOKEN) {
     throw new Error("APIFY_TOKEN não definido no .env");
 }
 
+console.log("Chave do Apify:", process.env.APIFY_TOKEN ? "OK" : "FALHOU");
+console.log("Chave do Gemini:", process.env.GEMINI_TOKEN ? "OK" : "FALHOU");
+
 const client = new ApifyClient({
     token: process.env.APIFY_TOKEN,
 });
@@ -46,6 +49,7 @@ app.get("/getProfileData", async (req: Request, res: Response) => {
             keysAvaliable: keysProfile,
             username: items[0]?.username,
             fullName: items[0]?.fullName,
+            privateAccount: items[0]?.private,
             followersCount: items[0]?.followersCount,
             followsCount: items[0]?.followsCount,
             postsCount: items[0]?.postsCount,
@@ -63,10 +67,54 @@ app.get("/getProfileData", async (req: Request, res: Response) => {
 
 app.post("/generateReport", async (req: Request, res: Response) => {
 
-    const { fullName, followersCount, followsCount,  totalLikes, totalComments, likesMean, commentsMean } = req.body;
-
+    const { user, fullName, privateAccount, followersCount, followsCount, numberPosts, totalLikes, totalComments, likesMean, commentsMean } = req.body;
+    const privatePortuguese = privateAccount ? "verdadeiro" : "falso";
+    
     if (!fullName || followersCount === undefined) {
         return res.status(400).json({ message: "Faltam dados para gerar o relatório." });
+    }
+
+    try{
+
+        if (!process.env.GEMINI_TOKEN) {
+            throw new Error("APIFY_TOKEN não definido no .env");
+        }
+
+
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_TOKEN);
+
+        const model = genAI.getGenerativeModel({model: "gemini-2.5-flash"});
+
+        const prompt = `Você é um especialista em marketing digital sênior da startup Intellux.
+        Crie um relatório curto, engajador e direto ao ponto (máximo de 3 parágrafos) analisando os seguintes dados do perfil de ${fullName}:
+        - Username: ${user};
+        - Seguidores: ${followersCount};
+        - Seguindo: ${followsCount};
+        - Privacidade da conta: ${privatePortuguese};
+        - Numero de posts: ${numberPosts};
+        - Número total de likes do perfil: ${totalLikes};
+        - Número total de comentários do perfil: ${totalComments};
+        - Média de curtidas por post: ${likesMean};
+        - Média de comentários por post: ${commentsMean};
+        Não colocar efeitos de negrito, etc, na resposta fornecida (apenas o texto cru). Atente-se que se a conta for privada, 
+        não será possível verificar as outras métricas da conta, apenas a quantidade de seguidores e seguindo, todos 
+        os outros atributos serão zerados. No final, dê uma sugestão breve de como essa pessoa pode melhorar o engajamento. 
+        Assine como "Intellux IA".`;
+
+        console.log("/n/n", prompt, "/n/n");
+
+        const result = await model.generateContent(prompt);
+        const responseText = result.response.text();
+
+        console.log("Relatório gerado com sucesso.");
+
+        return res.json({ 
+            message: "Relatório gerado com sucesso",
+            report: responseText 
+        });
+    } catch(e) {
+        console.error("Erro na API do Gemini:", e);
+        return res.status(500).json({ message: "Erro ao gerar o relatório com a IA" });
     }
 
 })
