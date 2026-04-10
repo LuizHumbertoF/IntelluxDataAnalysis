@@ -204,53 +204,53 @@ export function MainDiv() {
                 </h2>
 
                     <div className='flex flex-col'>
-                        <div className='bg-red-700 w-[900px] h-[130px] flex items-center justify-end gap-2 pr-8 '>
+                        <div className=' w-[900px] h-[140px] flex flex-col items-center justify-center gap-2 pr-8 '>
                             
-                            
-                            <div className="relative bg-[#d3d3d1] w-[600px] h-[65px] rounded-full shadow-md border border-[#61615f] flex items-center">
+                            <div className='flex items-center justify-center gap-2'>
+                                <div className="relative bg-[#d3d3d1] w-[600px] h-[65px]  rounded-full shadow-md border border-[#61615f] flex items-center">
 
-                                <FaSearch className="absolut mt-5 ml-5 w-[25px] transform -translate-y-1/2 text-black" />
-                                <div>
-                                <input 
-                                    type="text"
-                                    value={usernameSearch}
-                                    onChange={(e) => {
-                                                const textoDigitado = e.target.value;
-                                                setUsernameSearch(textoDigitado);
-                                                
-                                                // Se tiver qualquer coisa diferente de letra, número, ponto ou underline, dá erro
-                                                if (/[^a-zA-Z0-9._]/.test(textoDigitado)) {
-                                                    setUsernameError(true);
-                                                } else {
-                                                    setUsernameError(false);
-                                                }
-                                    }}
-                                    placeholder={renderLang(selectedLanguage, "Digite o username do usuário do Instagram", "Enter the Instagram username", "Ingresa el usuario de Instagram")}
-                                    className="bg-[#d3d3d1] w-full h-full pl-3 rounded-full placeholder-[#5a5a59] focus:outline-none"    
-                                />
+                                    <FaSearch className="absolut mt-5 ml-5 w-[25px] transform -translate-y-1/2 text-black" />
+                                    
+                                    <input 
+                                        type="text"
+                                        value={usernameSearch}
+                                        onChange={(e) => {
+                                                    const textoDigitado = e.target.value;
+                                                    setUsernameSearch(textoDigitado);
+                                                    
+                                                    // Se tiver qualquer coisa diferente de letra, número, ponto ou underline, dá erro
+                                                    if (/[^a-zA-Z0-9._]/.test(textoDigitado)) {
+                                                        setUsernameError(true);
+                                                    } else {
+                                                        setUsernameError(false);
+                                                    }
+                                        }}
+                                        placeholder={renderLang(selectedLanguage, "Digite o username do usuário do Instagram", "Enter the Instagram username", "Ingresa el usuario de Instagram")}
+                                        className="bg-[#d3d3d1] w-full h-full pl-3 rounded-full placeholder-[#5a5a59] focus:outline-none"    
+                                    />
+                                </div>
+
+                                <button 
+                                    className='bg-[#0b2f3a] text-[#d6fb49] font-bold w-[150px] h-[42px] rounded-full hover:underline hover:-translate-y-0.5 transition-transform duration-200 shadow-md'
+                                    onClick={handleClickSearch}
+                                >
+                                    {renderLang(selectedLanguage, "Buscar", "Search", "Buscar")}
+                                </button>
                             </div>
-
-                            <button 
-                                className='bg-[#0b2f3a] text-[#d6fb49] font-bold w-[150px] h-[42px] rounded-full hover:underline hover:-translate-y-0.5 transition-transform duration-200 shadow-md'
-                                onClick={handleClickSearch}
-                            >
-                                {renderLang(selectedLanguage, "Buscar", "Search", "Buscar")}
-                            </button>
                         
-                        </div>
 
-                        <div className={`absolute left-4 text-red-500 text-sm font-semibold transition-opacity duration-300 ${usernameError ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-                            {renderLang(
-                                selectedLanguage, 
-                                "* Use apenas letras, números, pontos (.) e underlines (_)", 
-                                "* Use only letters, numbers, dots (.) and underscores (_)", 
-                                "* Use solo letras, números, puntos (.) y guiones bajos (_)"
-                            )}
+                            <div className={`absolute bottom-20 left-15 text-red-500 text-sm font-semibold transition-opacity duration-300 ${usernameError ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                                {renderLang(
+                                    selectedLanguage, 
+                                    "* Use apenas letras, números, pontos (.) e underlines (_)", 
+                                    "* Use only letters, numbers, dots (.) and underscores (_)", 
+                                    "* Use solo letras, números, puntos (.) y guiones bajos (_)"
+                                )}
+                            </div>
                         </div>
                     </div>
 
                 </div>
             </div>    
-        </div>
     )
 }
